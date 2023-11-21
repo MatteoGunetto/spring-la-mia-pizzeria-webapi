@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.validation.Valid;
+import java.util.Optional;
 
 @Controller
 public class PizzaController {
@@ -34,10 +35,14 @@ public class PizzaController {
     @GetMapping("/{id}")
     public String showPizza(Model model, @PathVariable int id) {
 
-        Pizze pizza = pizzaService.findById(id);
-        model.addAttribute("pizza",pizza);
+        Optional<Pizze> pizzaOpt = pizzaService.findById(id);
+        if(!pizzaOpt.isEmpty()) {
+            Pizze pizza = pizzaOpt.get();
+            model.addAttribute("pizza",pizza);
+            return "show";
+        }
 
-        return "show";
+        return "redirect:/";
     }
 
     @GetMapping("/create")
@@ -66,11 +71,15 @@ public class PizzaController {
 
 @GetMapping("/update/{id}")
 public String editPizza(Model model, @PathVariable int id) {
-        Pizze pizza = pizzaService.findById(id);
+    Optional<Pizze> pizzaOpt = pizzaService.findById(id);
+    if(!pizzaOpt.isEmpty()) {
+        Pizze pizza = pizzaOpt.get();
 
         model.addAttribute("pizza", pizza);
 
         return "create";
+    }
+    return "redirect:/";
         }
 
 @PostMapping("/update/{id}")
@@ -92,8 +101,11 @@ public String updatePizza(Model model, @Valid @ModelAttribute Pizze pizza, Bindi
 
 @PostMapping("/delete/{id}")
 public String delete(Model model, @PathVariable int id) {
-        Pizze pizza = pizzaService.findById(id);
+    Optional<Pizze> pizzaOpt = pizzaService.findById(id);
+    if(!pizzaOpt.isEmpty()) {
+        Pizze pizza = pizzaOpt.get();
         pizzaService.deletePizza(pizza);
-        return "redirect:/";
-        }
+    }
+    return "redirect:/";
+}
 }

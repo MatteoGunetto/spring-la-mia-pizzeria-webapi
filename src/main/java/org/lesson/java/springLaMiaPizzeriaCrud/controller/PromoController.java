@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.util.Optional;
 
 import jakarta.validation.Valid;
 
@@ -28,22 +29,33 @@ public class PromoController {
 
     @GetMapping("/promo/{pizza}")
     public String createPromo(Model model, @PathVariable("pizza") int id) {
-        Pizze pizza = pizzaService.findById(id);
+
         Promo promo = new Promo();
+        Optional<Pizze> pizzaOpt = pizzaService.findById(id);
 
-        model.addAttribute("promo", promo);
-        model.addAttribute("pizza",pizza);
+        if(!pizzaOpt.isEmpty()) {
+            Pizze pizza = pizzaOpt.get();
+            model.addAttribute("promo", promo);
+            model.addAttribute("pizza", pizza);
 
-        return "promo_create";
+            return "promo_create";
+        }
+
+        return "redirect:/";
     }
 
     @PostMapping("/promo/{pizza}")
     public String storePromo(Model model, @PathVariable("pizza") int id, @Valid @ModelAttribute Promo promo, BindingResult bindingResult) {
-        Pizze pizza = pizzaService.findById(id);
-        promo.setPizza(pizza);
-        promoService.save(promo);
+        Optional<Pizze> pizzaOpt = pizzaService.findById(id);
+        if(!pizzaOpt.isEmpty()) {
+            Pizze pizza = pizzaOpt.get();
 
-        return "redirect:/" + id;
+            promo.setPizza(pizza);
+
+            promoService.save(promo);
+            return "redirect:/" + id;
+        }
+        return "redirect:/";
     }
 
     @PostMapping("/promo/delete/{promo_id}")

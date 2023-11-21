@@ -3,6 +3,7 @@ package org.lesson.java.springLaMiaPizzeriaCrud.DB;
 import java.time.LocalDate;
 
 import org.hibernate.validator.constraints.Length;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,6 +34,7 @@ public class Promo {
 
     @ManyToOne
     @JoinColumn(nullable = false)
+    @JsonBackReference
     private Pizze pizza;
 
     public Promo() {}

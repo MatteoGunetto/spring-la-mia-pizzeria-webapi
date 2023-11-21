@@ -3,6 +3,9 @@ package org.lesson.java.springLaMiaPizzeriaCrud.DB;
 import java.util.List;
 import java.util.Arrays;
 import jakarta.validation.constraints.NotEmpty;
+import org.lesson.java.springLaMiaPizzeriaCrud.api.dto.PizzaDTO;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,8 +36,10 @@ public class Pizze {
     private float price;
 
     @OneToMany(mappedBy = "pizza")
+    @JsonManagedReference
     private List<Promo> promos;
     @ManyToMany
+    @JsonManagedReference
     private List<Ingredient> ingredients;
 
     public Pizze() {}
@@ -44,6 +49,13 @@ public class Pizze {
         setPicture(picture);
         setPrice(price);
         setIngredients(Arrays.asList(ingredients));
+    }
+
+    public Pizze(PizzaDTO pizza) {
+        setName(pizza.getName());
+        setDescription(pizza.getDescription());
+        setPicture(pizza.getPicture());
+        setPrice(pizza.getPrice());
     }
 
     public int getId() {
@@ -111,6 +123,13 @@ public class Pizze {
 
     public void addIngredients(Ingredient... ingredients) {
         getIngredients().addAll(Arrays.asList(ingredients));
+    }
+
+    public void fillFromPizzaDTO(PizzaDTO pizzaDTO) {
+        setName(pizzaDTO.getName());
+        setDescription(pizzaDTO.getDescription());
+        setPicture(pizzaDTO.getPicture());
+        setPrice(pizzaDTO.getPrice());
     }
 
     @Override
