@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{frags :: head(${pizza.id} == 0 ? 'Create a new pizza' : 'Edit a pizza')}"></head>
+
+    <body class="bg-secondary">
+        <div class="container my-5">
+            <div class="row mb-4 d-flex align-items-center justify-content-between">
+                <div class="col">
+                    <h1>[[${pizza.id} == 0 ? 'Crea a nuova pizza': 'Modifica una pizza']]</h1>
+                </div>
+                <div class="banner" style="height: 300px; text-align: center; overflow: hidden; position: relative;">
+                    <!-- Inserisci l'immagine nel banner -->
+                    <img src="/photo/_63929591-66ff-4d65-8f9a-08da0132b5c4.jpg" alt="Banner Image" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 90%">
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <a href="/" type="button" class="btn btn-outline-dark rounded-0 bg-info my-2">Back</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <form method="post"
+                        class="d-flex flex-column justify-content-start align-items-start gap-3 w-100 shadow p-5 bg-white"
+                        th:object="${pizza}">
+
+                        <div class="w-100">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control rounded-0 w-100" name="name" id="name"
+                                aria-describedby="nameHelpId" placeholder="inserisci nome della pizza" th:field="*{name}">
+                            <div class="mt-3" th:if="${#fields.hasErrors('name')}">
+                                <ul class="alert alert-danger rounded-0 d-flex flex-column justify-content-start gap-3">
+                                    <li class="ms-3" th:each="err : ${#fields.errors('name')}">[[${err}]]</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="w-100">
+                            <label for="description" class="form-label">Descrizione</label>
+                            <input type="text" class="form-control rounded-0 w-100" name="description" id="description"
+                                aria-describedby="descriptionHelpId" placeholder="Pizza al..." th:field="*{description}">
+                            <div class="mt-3" th:if="${#fields.hasErrors('description')}">
+                                <ul class="alert alert-danger rounded-0 d-flex flex-column justify-content-start gap-3">
+                                    <li class="ms-3" th:each="err : ${#fields.errors('description')}">[[${err}]]</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="w-100">
+                            <label for="picture" class="form-label">foto URL</label>
+                            <input type="text" class="form-control rounded-0 w-100" name="picture" id="picture"
+                                 placeholder="http://picsum.photos/600/600"
+                                th:field="*{picture}">
+                            <div class="mt-3" th:if="${#fields.hasErrors('picture')}">
+                                <ul class="alert alert-danger rounded-0 d-flex flex-column justify-content-start gap-3">
+                                    <li class="ms-3" th:each="err : ${#fields.errors('picture')}">[[${err}]]</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="w-100">
+                            <label for="price" class="form-label">Prezzo</label>
+
+                            <input type="number" class="form-control rounded-0 w-100" min="3.00" step=".09" name="price"
+                                id="price" aria-describedby="priceHelpId" th:field="*{price}">
+                            <div class="mt-3" th:if="${#fields.hasErrors('price')}">
+                                <ul class="alert alert-danger rounded-0 d-flex flex-column justify-content-start gap-3">
+                                    <li class="ms-3" th:each="err : ${#fields.errors('price')}">[[${err}]]</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3 align-self-end">
+                            <button type="submit" class="btn btn-outline-dark rounded-0">
+                                [[${pizza.id == 0 ? 'Crea' : 'Modifica'}]]
+                            </button>
+                            <button type="reset" class="btn btn-outline-danger rounded-0">Reset</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

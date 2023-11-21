@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
+
+    <head th:replace="~{frags :: head('Menù')}"></head>
+
+    <body class="bg-secondary">
+    <div th:fragment="login" class="d-flex align-items-center gap-2">
+	<span sec:authorize="hasAnyAuthority('USER', 'ADMIN')" class="d-flex align-items-center">
+		<span sec:authentication="name" type="button" class="fw-semibold btn btn-dark rounded-0 border-end-0 text-uppercase"></span>
+
+		<a href="/logout" type="button" class="btn btn-outline-dark rounded-0 text-uppercase bg-danger">logout</a>
+	</span>
+        <span sec:authorize="!hasAnyAuthority('USER', 'ADMIN')">
+		<a href="/login" type="button" class="btn btn-outline-dark rounded-0 text-uppercase bg-info">LOGIN</a>
+	</span>
+    </div>
+    <div class="container my-5">
+        <div class="row my-3">
+            <div class="col-1">
+                <img src="/photo/_5e7337f1-5b79-43fd-b338-ec962d2550e4.jpg" alt="Logo" width="60" height="60" class="d-inline-block">
+            </div>
+            <div class="col">
+                <h1>Mamma Mia Pizzaria!!!</h1>
+            </div>
+        </div>
+        <div class="banner" style="height: 300px; text-align: center; overflow: hidden; position: relative;">
+            <!-- Inserisci l'immagine nel banner -->
+            <img src="/photo/_63929591-66ff-4d65-8f9a-08da0132b5c4.jpg" alt="Banner Image" style="width: 100%; height: 100%; object-fit: cover; object-position: bottom">
+        </div>
+        <div class="row flex-column flex-md-row mb-4">
+            <div class="col">
+                <a href="/create" type="button" class="btn btn-outline-dark rounded-0  bg-warning my-2" sec:authorize="hasAuthority('ADMIN')">Crea nuova pizza</a>
+                <a href="/ingredients" type="button" class="btn btn-dark rounded-0" sec:authorize="hasAuthority('ADMIN')">Ingredients List</a>
+            </div>
+            <div class="col">
+                <form class="d-flex align-items-center my-2">
+                    <input type="text" class="form-control rounded-0"  name="name" id="name" aria-describedby="helpId"
+                           placeholder="Cerca la tua pizza!">
+                    <button type="submit" class="btn btn-outline-dark rounded-0 bg-success">Ricerca</button>
+                </form>
+
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+            <div class="col" th:each="pizza : ${pizzas}" th:object="${pizza}">
+                <div class="h-100 card text-start text-decoration-none rounded-0 border-0 shadow product_card">
+                    <img class="card-img-top rounded-0 object-fit-cover" height="250" th:src="${pizza.picture}">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h4 class="card-title">[[${pizza.name}]]</h4>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <small
+                                    class="card-footer bg-transparent border border-dark rounded-0">[[${pizza.price}]]€</small>
+                            <div class="d-flex align-items-center justify-content-end gap-2">
+                                <a type="button" class="btn btn-outline-dark rounded-0 bg-primary"
+                                   th:href="@{/{id}(id=${pizza.getId()})}">Dettagli</a>
+                                <a type="button" th:href="@{/update/{id}(id=${pizza.getId()})}"
+                                   class="btn btn-outline-dark rounded-0 bg-warning " sec:authorize="hasAuthority('ADMIN')">Modifica</a>
+                                <form method="POST" th:action="@{/delete/{id}(id=*{id})}"
+                                      onsubmit="return confirm('Sei sicuro di volerla cancellare?')" sec:authorize="hasAuthority('ADMIN')">
+                                    <button type="submit" class="btn btn-outline-dark rounded-0 bg-danger">Eimina</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row p-5 bg-white shadow" th:if="${pizzas.size() == 0}">
+            <h3 class="col fw-semibold w-100 text-center">No pizzas Yet!</h3>
+        </div>
+        </div>
+    </body>
+</html>
